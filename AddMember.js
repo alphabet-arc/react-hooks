@@ -179,7 +179,7 @@ class AddMember extends Component {
       const response = await fetch(
         `/api/tracker/technologies/remove/${name}`,
         {
-          method: "DELETE",
+          method: "Delete",
           headers: {
             Authorization: `Bearer ${this.getLocalStorage()}`,
           },
@@ -219,12 +219,16 @@ class AddMember extends Component {
         <form>
           <h1>Add Team Member</h1>
           <div>
-            <input type="number" name="empId" placeholder="Employee ID"
-              value={empId} onChange={this.handleChange} />
+            <input
+              type="number" name="empId" placeholder="Employee ID"
+              value={empId} onChange={this.handleChange}
+            />
             <span>{errorStmtEmpId}</span>
 
-            <input type="text" name="empName" placeholder="Employee Name"
-              value={empName} onChange={this.handleChange} />
+            <input
+              type="text" name="empName" placeholder="Employee Name"
+              value={empName} onChange={this.handleChange}
+            />
             <span>{errorStmtEmpName}</span>
 
             <select name="teamName" value={teamName} onChange={this.handleChange}>
@@ -240,7 +244,10 @@ class AddMember extends Component {
             {createTeam && (
               <div className="addList">
                 <p>Create New Label</p>
-                <input type="text" name="newTeam" value={newTeam} onChange={this.handleChange} />
+                <input
+                  type="text" name="newTeam" value={newTeam}
+                  onChange={this.handleChange}
+                />
                 <button type="button" onClick={this.handleSave}>Save</button>
                 <button type="button" onClick={(e) => this.handleCancel(e, "add")}>Cancel</button>
               </div>
@@ -255,26 +262,48 @@ class AddMember extends Component {
                       <tr key={t._id}>
                         <td>{t.name}</td>
                         <td>
-                          <img src={remove} alt="x"
-                            onClick={(e) => this.handleRemoveTeam(e, t.name)} />
+                          <img
+                            src={remove} alt="x"
+                            onClick={(e) => this.handleRemoveTeam(e, t.name)}
+                          />
                         </td>
                       </tr>
                     ))}
+                    <tr>
+                      <td>
+                        <button
+                          type="button"
+                          onClick={(e) => this.handleCancel(e, "delete")}
+                        >
+                          Cancel
+                        </button>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
-                <button type="button" onClick={(e) => this.handleCancel(e, "delete")}>Cancel</button>
               </div>
             )}
 
-            <input type="number" name="experience" placeholder="Experience"
-              value={experience} onChange={this.handleChange} />
+            <input
+              type="number" name="experience" placeholder="Experience"
+              value={experience} onChange={this.handleChange}
+            />
             <span>{errorStmtExperience}</span>
           </div>
 
           <div>
-            <button className="button" type="button"
-              disabled={!isAddEnabled} onClick={this.handleAddMember}>Add</button>
-            <button className="button" type="button" onClick={this.handleClear}>Clear</button>
+            <button
+              className="button" type="button"
+              disabled={!isAddEnabled} onClick={this.handleAddMember}
+            >
+              Add
+            </button>
+            <button
+              className="button" type="button"
+              onClick={this.handleClear}
+            >
+              Clear
+            </button>
           </div>
         </form>
       </>
