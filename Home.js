@@ -82,6 +82,7 @@ class Home extends Component {
 
   handleEdit = (id) => {
     const member = this.state.data.find((m) => m._id === id);
+    if (!member) return;
     this.setState({
       edit: true,
       editId: id,
@@ -174,7 +175,7 @@ class Home extends Component {
             checked={checked === "Experience"}
             onChange={() => this.handleChecked("Experience")}
           />
-          <label>Experience</label>
+          <label>Expericence</label>
           <input
             type="radio" name="checked" value="Team"
             checked={checked === "Team"}
@@ -189,10 +190,7 @@ class Home extends Component {
           <label>Both</label>
 
           {checked === "Team" && (
-            <select
-              name="experienceFilter" value={experienceFilter}
-              onChange={this.handleChange}
-            >
+            <select name="experienceFilter" value={experienceFilter} onChange={this.handleChange}>
               <option value="">--Select Team--</option>
               {team.map((t) => (
                 <option key={t._id} value={t.name}>{t.name}</option>
@@ -209,10 +207,7 @@ class Home extends Component {
 
           {checked === "Both" && (
             <>
-              <select
-                name="experienceFilter" value={experienceFilter}
-                onChange={this.handleChange}
-              >
+              <select name="experienceFilter" value={experienceFilter} onChange={this.handleChange}>
                 <option value="">--Select Team--</option>
                 {team.map((t) => (
                   <option key={t._id} value={t.name}>{t.name}</option>
