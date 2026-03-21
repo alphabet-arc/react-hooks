@@ -19,10 +19,12 @@ class Home extends Component {
 
   async componentDidMount() {
     if (this.getLocalStorage()) {
-      const data = await this.handleGetMembers("/api/tracker/members/display");
-      if (data) this.setState({ initialData: data });
+      const initialData = await this.handleGetMembers("/api/tracker/members/display");
+      if (initialData) this.setState({ initialData });
       const team = await this.handleGetTech();
       if (team) this.setState({ team });
+      const data = await this.handleGetMembers("/api/tracker/members/display");
+      if (data) this.setState({ data });
     } else {
       if (this.props.history) this.props.history.push("/login");
     }
@@ -133,13 +135,7 @@ class Home extends Component {
   handleDone = async (e) => {
     const status = await this.handleEditRequest();
     if (status === 200) {
-      this.setState({
-        edit: false,
-        editId: undefined,
-        empId: "",
-        empName: "",
-        experience: "",
-      });
+      this.setState({ edit: false, editId: undefined, empId: "", empName: "", experience: "" });
       this.handleGetMembers("/api/tracker/members/display");
     }
   };
@@ -178,53 +174,39 @@ class Home extends Component {
         <Header />
         <section>
           <label>Filter By</label>
-          <input
-            type="radio" name="checked" value="Experience"
+          <input type="radio" name="checked" value="Experience"
             checked={checked === "Experience"}
-            onChange={() => this.handleChecked("Experience")}
-          />
+            onChange={() => this.handleChecked("Experience")} />
           <label>Expericence</label>
-          <input
-            type="radio" name="checked" value="Team"
+          <input type="radio" name="checked" value="Team"
             checked={checked === "Team"}
-            onChange={() => this.handleChecked("Team")}
-          />
+            onChange={() => this.handleChecked("Team")} />
           <label>Team</label>
-          <input
-            type="radio" name="checked" value="Both"
+          <input type="radio" name="checked" value="Both"
             checked={checked === "Both"}
-            onChange={() => this.handleChecked("Both")}
-          />
+            onChange={() => this.handleChecked("Both")} />
           <label>Both</label>
 
           {checked === "Team" && (
             <select name="teamName" value={teamName} onChange={this.handleChange}>
               <option value="">--Select Team--</option>
-              {team.map((t) => (
-                <option key={t._id} value={t.name}>{t.name}</option>
-              ))}
+              {team.map((t) => <option key={t._id} value={t.name}>{t.name}</option>)}
             </select>
           )}
 
           {checked === "Experience" && (
-            <input
-              type="number" name="experienceFilter" placeholder="Experience"
-              value={experienceFilter} onChange={this.handleChange}
-            />
+            <input type="number" name="experienceFilter" placeholder="Experience"
+              value={experienceFilter} onChange={this.handleChange} />
           )}
 
           {checked === "Both" && (
             <>
               <select name="teamName" value={teamName} onChange={this.handleChange}>
                 <option value="">--Select Team--</option>
-                {team.map((t) => (
-                  <option key={t._id} value={t.name}>{t.name}</option>
-                ))}
+                {team.map((t) => <option key={t._id} value={t.name}>{t.name}</option>)}
               </select>
-              <input
-                type="number" name="experienceFilter" placeholder="Experience"
-                value={experienceFilter} onChange={this.handleChange}
-              />
+              <input type="number" name="experienceFilter" placeholder="Experience"
+                value={experienceFilter} onChange={this.handleChange} />
             </>
           )}
 
