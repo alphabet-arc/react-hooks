@@ -12,7 +12,7 @@ class MoveMember extends Component {
   };
 
   async componentDidMount() {
-    if (localStorage.getItem("token")) {
+    if (this.getLocalStorage()) {
       const teams = await this.handleGetTeam();
       this.setState({ teams });
       const data = await this.handleGetMembers("/api/tracker/members/display");
@@ -57,10 +57,7 @@ class MoveMember extends Component {
       if (!value) {
         this.setState({ errorStmtEmpId: "*Please enter a value" });
       } else if (Number(value) < 100000 || Number(value) > 3000000) {
-        this.setState({
-          errorStmtEmpId:
-            "*Employee ID is expected between 100000 and 3000000",
-        });
+        this.setState({ errorStmtEmpId: "*Employee ID is expected between 100000 and 3000000" });
       } else {
         this.setState({ errorStmtEmpId: "" });
       }
@@ -68,12 +65,7 @@ class MoveMember extends Component {
   };
 
   handleClear = () => {
-    this.setState({
-      empId: "",
-      fromTeam: "",
-      toTeam: "",
-      errorStmtEmpId: "",
-    });
+    this.setState({ empId: "", fromTeam: "", toTeam: "", errorStmtEmpId: "" });
   };
 
   MoveRequest = async () => {
@@ -106,40 +98,23 @@ class MoveMember extends Component {
 
   render() {
     const { teams, empId, fromTeam, toTeam, errorStmtEmpId } = this.state;
-
-    const isMoveEnabled =
-      empId !== "" &&
-      fromTeam !== "" &&
-      toTeam !== "" &&
-      errorStmtEmpId === "";
+    const isMoveEnabled = empId !== "" && fromTeam !== "" && toTeam !== "" && errorStmtEmpId === "";
 
     return (
       <>
         <Header />
         <form className="MoveMember">
           <h1>Move Team Member</h1>
-          <input
-            className="MoveMember"
-            type="text"
-            name="empId"
-            placeholder="Employee ID"
-            value={empId}
-            onChange={this.handleChange}
-          />
+          <input className="MoveMember" type="text" name="empId"
+            placeholder="Employee ID" value={empId} onChange={this.handleChange} />
           <span>{errorStmtEmpId}</span>
 
           <div className="fromTo">
             <label>From</label>
-            <select
-              name="fromTeam"
-              value={fromTeam}
-              onChange={this.handleChange}
-            >
+            <select name="fromTeam" value={fromTeam} onChange={this.handleChange}>
               <option value="">--Select Team--</option>
               {teams.map((t) => (
-                <option key={t._id} value={t.name}>
-                  {t.name}
-                </option>
+                <option key={t._id} value={t.name}>{t.name}</option>
               ))}
             </select>
 
@@ -147,25 +122,15 @@ class MoveMember extends Component {
             <select name="toTeam" value={toTeam} onChange={this.handleChange}>
               <option value="">--Select Team--</option>
               {teams.map((t) => (
-                <option key={t._id} value={t.name}>
-                  {t.name}
-                </option>
+                <option key={t._id} value={t.name}>{t.name}</option>
               ))}
             </select>
           </div>
 
           <div className="row3">
-            <button
-              className="add"
-              type="button"
-              disabled={!isMoveEnabled}
-              onClick={this.handleMove}
-            >
-              Move
-            </button>
-            <button className="add" type="button" onClick={this.handleClear}>
-              Clear
-            </button>
+            <button className="add" type="button"
+              disabled={!isMoveEnabled} onClick={this.handleMove}>Move</button>
+            <button className="add" type="button" onClick={this.handleClear}>Clear</button>
           </div>
         </form>
       </>
