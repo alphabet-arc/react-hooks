@@ -14,8 +14,9 @@ class MoveMember extends Component {
   async componentDidMount() {
     if (localStorage.getItem("token")) {
       const teams = await this.handleGetTeam();
-      if (teams) this.setState({ teams });
-      await this.handleGetMembers("/api/tracker/members/display");
+      this.setState({ teams });
+      const data = await this.handleGetMembers("/api/tracker/members/display");
+      if (data) this.setState({ data });
     } else {
       if (this.props.history) this.props.history.push("/login");
     }
@@ -31,7 +32,6 @@ class MoveMember extends Component {
         headers: { Authorization: `Bearer ${this.getLocalStorage()}` },
       });
       const teams = await response.json();
-      this.setState({ teams });
       return teams;
     } catch (e) {
       console.log(e);
@@ -44,7 +44,6 @@ class MoveMember extends Component {
         headers: { Authorization: `Bearer ${this.getLocalStorage()}` },
       });
       const data = await response.json();
-      this.setState({ data });
       return data;
     } catch (e) {
       console.log(e);
@@ -100,7 +99,8 @@ class MoveMember extends Component {
     const status = await this.MoveRequest();
     if (status === 200) {
       this.handleClear();
-      this.handleGetMembers("/api/tracker/members/display");
+      const data = await this.handleGetMembers("/api/tracker/members/display");
+      if (data) this.setState({ data });
     }
   };
 

@@ -20,7 +20,7 @@ class AddMember extends Component {
   async componentDidMount() {
     if (localStorage.getItem("token")) {
       const teams = await this.handleGetTeam();
-      if (teams) this.setState({ teams });
+      this.setState({ teams });
     } else {
       if (this.props.history) this.props.history.push("/login");
     }
@@ -36,7 +36,6 @@ class AddMember extends Component {
         headers: { Authorization: `Bearer ${this.getLocalStorage()}` },
       });
       const teams = await response.json();
-      this.setState({ teams });
       return teams;
     } catch (e) {
       console.log(e);
@@ -90,9 +89,9 @@ class AddMember extends Component {
   AddRequest = async () => {
     try {
       const response = await fetch("/api/tracker/members/add", {
-        method: "POST",
+        method: "post",
         headers: {
-          "Content-Type": "application/json",
+          "Content-type": "application/json; charset=UTF-8",
           Authorization: `Bearer ${this.getLocalStorage()}`,
         },
         body: JSON.stringify({
@@ -168,7 +167,8 @@ class AddMember extends Component {
     const status = await this.saveTeam();
     if (status === 201) {
       this.setState({ createTeam: false, newTeam: "" });
-      this.handleGetTeam();
+      const teams = await this.handleGetTeam();
+      this.setState({ teams });
     } else {
       alert("Team already exist");
     }
@@ -195,7 +195,8 @@ class AddMember extends Component {
     const status = await this.removeTeamRequest(tech);
     if (status === 200) {
       this.setState({ deleteTeam: false });
-      this.handleGetTeam();
+      const teams = await this.handleGetTeam();
+      this.setState({ teams });
     } else {
       alert("Couldn't delete the team");
     }
