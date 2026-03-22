@@ -58,7 +58,7 @@ membersRouter.get("/tracker/technologies/get", auth, async (req, res) => {
 // 4) POST /tracker/technologies/add
 membersRouter.post("/tracker/technologies/add", auth, async (req, res) => {
   try {
-    const { name } = req.body;
+    const name = req.body.name || req.body.technology_name;
     const existing = await Teams.findOne({ name });
     if (existing) {
       return res.status(400).send({ error: "Team already exist" });
