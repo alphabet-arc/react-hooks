@@ -35,14 +35,17 @@ membersRouter.post("/tracker/members/add", auth, async (req, res) => {
       return res.status(400).send({ error: "Member with same team already exists" });
     }
 
-    // Add technology to teams collection if it doesn't exist
+    // Create member first to trigger validation BEFORE auto-creating team
+    const member = new Members({ employee_id, employee_name, technology_name, experience });
+    await member.validate(); // throws if invalid - before we touch teams
+
+    // Only auto-create team if member data is valid
     const teamExists = await Teams.findOne({ name: technology_name });
     if (!teamExists) {
       const newTeam = new Teams({ name: technology_name });
       await newTeam.save();
     }
 
-    const member = new Members({ employee_id, employee_name, technology_name, experience });
     await member.save();
     res.status(201).send(member);
   } catch (e) {
@@ -53,7 +56,7 @@ membersRouter.post("/tracker/members/add", auth, async (req, res) => {
 // 3) GET /tracker/technologies/get
 membersRouter.get("/tracker/technologies/get", auth, async (req, res) => {
   try {
-    const teams = await Teams.find({}).sort({ name: 1 });
+    const teams = await Teams.find({});
     res.status(200).send(teams);
   } catch (e) {
     res.status(400).send({ error: e.message });
