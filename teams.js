@@ -5,7 +5,7 @@ const Members = require("../mongoose/models/members");
 const Teams = require("../mongoose/models/teams");
 const auth = require("../middlewares/auth");
 const jwt = require("jsonwebtoken");
-const { secret_token } = require("../helper");
+const { helpers } = require("../../helper");
 
 // 1) POST /admin/login
 membersRouter.post("/admin/login", async (req, res) => {
@@ -15,7 +15,7 @@ membersRouter.post("/admin/login", async (req, res) => {
     if (!admin) {
       return res.status(400).send({ error: "Username or password is wrong" });
     }
-    const token = jwt.sign({ _id: admin._id.toString() }, secret_token);
+    const token = jwt.sign({ _id: admin._id.toString() }, helpers.secret_token);
     admin.tokens = admin.tokens.concat({ token });
     await admin.save();
     res.status(200).send({ admin, token });
@@ -118,22 +118,6 @@ membersRouter.get("/tracker/members/display", auth, async (req, res) => {
 membersRouter.delete("/tracker/members/delete/:id", auth, async (req, res) => {
   try {
     const member = await Members.findByIdAndDelete(req.params.id);
-    if (!member) {
-      return res.status(400).send({ error: "Member not found" });
-    }
-    res.status(200).send(member);
-  } catch (e) {
-    res.status(400).send({ error: e.message });
-  }
-});
-
-// 9) PATCH /tracker/members/update/:id (move member to new team)
-membersRouter.patch("/tracker/members/update/:id", auth, async (req, res) => {
-  try {
-    const member = await Members.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
     if (!member) {
       return res.status(400).send({ error: "Member not found" });
     }

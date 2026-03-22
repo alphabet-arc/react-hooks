@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
-const { secret_token } = require("../helper");
+const { helpers } = require("../../helper");
 const Admin = require("../mongoose/models/admin");
 
 const auth = async (req, res, next) => {
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
-    const decoded = jwt.verify(token, secret_token);
+    const decoded = jwt.verify(token, helpers.secret_token);
     const admin = await Admin.findOne({
       _id: decoded._id,
       "tokens.token": token,
