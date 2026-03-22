@@ -35,6 +35,13 @@ membersRouter.post("/tracker/members/add", auth, async (req, res) => {
       return res.status(400).send({ error: "Member with same team already exists" });
     }
 
+    // Add technology to teams collection if it doesn't exist
+    const teamExists = await Teams.findOne({ name: technology_name });
+    if (!teamExists) {
+      const newTeam = new Teams({ name: technology_name });
+      await newTeam.save();
+    }
+
     const member = new Members({ employee_id, employee_name, technology_name, experience });
     await member.save();
     res.status(201).send(member);
