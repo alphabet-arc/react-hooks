@@ -56,7 +56,7 @@ membersRouter.post("/tracker/members/add", auth, async (req, res) => {
 // 3) GET /tracker/technologies/get
 membersRouter.get("/tracker/technologies/get", auth, async (req, res) => {
   try {
-    const teams = await Teams.find({});
+    const teams = await Teams.find({}).sort({ _id: 1 });
     res.status(200).send(teams);
   } catch (e) {
     res.status(400).send({ error: e.message });
